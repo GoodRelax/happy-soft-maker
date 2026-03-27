@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Soft Maker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #2d4a3e;
+    --bg2:     #243d33;
+    --fg:      #f0ead6;
+    --accent:  #4a7c59;
+    --accent2: #c4a882;
+    --muted:   #8aab96;
+    --card:    #243d33;
+    --border:  rgba(240,234,214,0.10);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Noto Serif JP', 'Noto Serif', Georgia, serif;
+    font-weight: 300;
+    line-height: 1.9;
+    overflow-x: hidden;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 2rem;
+    background: rgba(45,74,62,0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Noto Serif', 'Noto Serif JP', Georgia, serif;
+    font-weight: 400;
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    color: var(--fg);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Noto Serif', 'Noto Serif JP', Georgia, serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--fg); }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 2rem 5rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    font-family: 'Noto Serif', 'Noto Serif JP', Georgia, serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    color: var(--accent2);
+    font-style: italic;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Noto Serif', 'Noto Serif JP', Georgia, serif;
+    font-size: clamp(3rem, 9vw, 6rem);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.35s forwards;
+  }
+
+  .hero-title em {
+    font-style: normal;
+    color: var(--accent2);
+  }
+
+  .hero-sub {
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    color: rgba(240,234,214,0.62);
+    max-width: 580px;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.5s forwards;
+    line-height: 2;
+  }
+
+  .hero-cta {
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.65s forwards;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .btn {
+    display: inline-block;
+    font-family: 'Noto Serif', 'Noto Serif JP', Georgia, serif;
+    font-weight: 400;
+    font-size: 0.88rem;
+    letter-spacing: 0.1em;
+    padding: 0.9rem 2.2rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-primary { background: var(--fg); color: var(--bg2); }
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-2px); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--fg);
+    border: 1px solid rgba(240,234,214,0.3);
+  }
+  .btn-ghost:hover { border-color: var(--fg); transform: translateY(-2px); }
+
+  section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 5rem 2rem;
+  }
+
+  .section-eyebrow {
+    font-family: 'Noto Serif', 'Noto Serif JP', Georgia, serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    color: var(--accent2);
+    font-style: italic;
+    margin-bottom: 2rem;
+  }
+
+  .section-title {
+    font-family: 'Noto Serif', 'Noto Serif JP', Georgia, serif;
+    font-size: clamp(1.7rem, 3.5vw, 2.4rem);
+    font-weight: 300;
+    line-height: 1.3;
+    margin-bottom: 1.25rem;
+  }
+
+  .section-body {
+    color: rgba(240,234,214,0.62);
+    font-size: 0.95rem;
+    max-width: 620px;
+    line-height: 2;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    margin-top: 3rem;
+    border: 1px solid var(--border);
+  }
+
+  .step {
+    background: var(--card);
+    padding: 2rem 1.75rem;
+  }
+
+  .step-num {
+    font-family: 'Noto Serif', Georgia, serif;
+    font-size: 2.2rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--accent2);
+    opacity: 0.4;
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  .step-title {
+    font-family: 'Noto Serif', 'Noto Serif JP', Georgia, serif;
+    font-weight: 400;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    color: var(--fg);
+  }
+
+  .step-body {
+    font-family: 'Noto Serif JP', 'Noto Serif', Georgia, serif;
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  .criteria {
+    list-style: none;
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .criteria li {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    padding: 1.25rem 1.5rem;
+    background: var(--card);
+    border-left: 2px solid var(--accent2);
+  }
+
+  .criteria-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+    width: 20px;
+    text-align: center;
+  }
+
+  .criteria-text {
+    font-size: 0.9rem;
+    color: rgba(240,234,214,0.7);
+    line-height: 1.7;
+  }
+
+  .cta-block {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 3.5rem;
+    text-align: center;
+    margin-top: 4rem;
+  }
+
+  .cta-block .section-body {
+    margin: 0 auto 2.5rem;
+  }
+
+  .rule {
+    border: none;
+    border-top: 1px solid var(--border);
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .lang-divider {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+
+  .lang-divider::before,
+  .lang-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .lang-divider-label {
+    font-family: 'Noto Serif', 'Noto Serif JP', Georgia, serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    font-style: italic;
+    white-space: nowrap;
+  }
+
+  .manifesto {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+    padding: 5rem 2rem;
+  }
+
+  .manifesto-inner {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .manifesto-tag {
+    font-family: 'Noto Serif', Georgia, serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 2.5rem;
+  }
+
+  .manifesto-headline {
+    font-family: 'Noto Serif', 'Noto Serif JP', Georgia, serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 300;
+    line-height: 1.15;
+    color: var(--fg);
+    margin-bottom: 2rem;
+  }
+
+  .manifesto-headline em {
+    font-style: italic;
+    color: var(--accent2);
+  }
+
+  .manifesto-body {
+    font-family: 'Noto Serif JP', 'Noto Serif', Georgia, serif;
+    font-size: 1rem;
+    font-weight: 300;
+    color: rgba(240,234,214,0.62);
+    max-width: 640px;
+    line-height: 2.1;
+  }
+
+  footer {
+    text-align: center;
+    padding: 2.5rem 2rem;
+    border-top: 1px solid var(--border);
+    font-family: 'Noto Serif', 'Noto Serif JP', Georgia, serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  footer a { color: var(--accent2); text-decoration: none; }
+  footer a:hover { color: var(--fg); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    .cta-block { padding: 2rem 1.25rem; }
+    nav { padding: 1rem; }
+    .nav-links { gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">happy-soft-maker.org</a>
+  <ul class="nav-links">
+    <li><a href="#en-what">About</a></li>
+    <li><a href="#en-transfer">Transfer</a></li>
+    <li><a href="https://github.com/GoodRelax/gr-sw-maker" target="_blank">GitHub ↗</a></li>
+  </ul>
+</nav>
+
+<!-- ENGLISH HERO -->
+<div class="hero">
+  <p class="eyebrow">happy-soft-maker.org</p>
+  <h1 class="hero-title">
+    Software that<br>makes everyone<br><em>happy.</em>
+  </h1>
+  <p class="hero-sub">
+    An OSS framework that nearly fully automates software development with AI.<br>
+    Looking for someone to carry this vision to the next level.
+  </p>
+  <div class="hero-cta">
+    <a class="btn btn-primary" href="#en-transfer">Read more</a>
+    <a class="btn btn-ghost" href="https://github.com/GoodRelax/gr-sw-maker" target="_blank">View on GitHub ↗</a>
+  </div>
+</div>
+
+<!-- ENGLISH MANIFESTO -->
+<div class="manifesto">
+  <div class="manifesto-inner">
+    <p class="manifesto-tag">manifesto</p>
+    <h2 class="manifesto-headline">Beyond Software.<br><em>Toward Happiness.</em></h2>
+    <p class="manifesto-body">
+      The era of software as value is over.<br>
+      Imagine a world where we stop obsessing over tools —
+      software, hardware, whatever —
+      and start obsessing over what truly matters:
+      who we make happy, and how.
+    </p>
+  </div>
+</div>
+
+<!-- ENGLISH: WHAT -->
+<section id="en-what">
+  <p class="section-eyebrow">About the project</p>
+  <h2 class="section-title">What is gr-sw-maker?</h2>
+  <p class="section-body">
+    A framework where AI handles everything — specs, design, implementation, testing, and delivery —
+    from a single concept description. You write what you want to build, and receive the finished product.
+  </p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-title">Write a concept</div>
+      <div class="step-body">What you want to build, and why. That's all you need to provide.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-title">AI runs all 8 phases</div>
+      <div class="step-body">Specs → design → implementation → testing → delivery. Quality gates at every step.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-title">Receive the deliverable</div>
+      <div class="step-body">Code, tests, docs, and deployment — all delivered together.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ENGLISH: TRANSFER -->
+<section id="en-transfer" style="border-top: 1px solid var(--border);">
+  <p class="section-eyebrow">Domain transfer</p>
+  <h2 class="section-title">We'll hand this domain<br>to the right hands.</h2>
+  <p class="section-body">
+    happy-soft-maker.org will be transferred — free of charge — to an organization or individual
+    who can drive gr-sw-maker forward as an enterprise-level OSS project.
+  </p>
+  <ul class="criteria">
+    <li>
+      <span class="criteria-icon">🌍</span>
+      <span class="criteria-text">Committed to growing it openly as OSS and contributing to the broader community</span>
+    </li>
+    <li>
+      <span class="criteria-icon">🏢</span>
+      <span class="criteria-text">Has the organizational resources and sustained will to push the project forward at scale</span>
+    </li>
+    <li>
+      <span class="criteria-icon">💡</span>
+      <span class="criteria-text">Genuinely aligned with the vision: make it easy for everyone to build software that makes people happy</span>
+    </li>
+  </ul>
+  <div class="cta-block">
+    <h3 class="section-title">Let's talk.</h3>
+    <p class="section-body">Reach out via GitHub Issues. No formal pitch needed — just say hello.</p>
+    <a class="btn btn-primary" href="https://github.com/GoodRelax/gr-sw-maker/issues" target="_blank">Open a GitHub Issue ↗</a>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="lang-divider">
+  <span class="lang-divider-label">以下、日本語</span>
+</div>
+
+<!-- JAPANESE HERO -->
+<div class="bg2">
+  <div class="hero" style="min-height: auto; padding-top: 4rem; padding-bottom: 4rem;">
+    <p class="eyebrow" style="opacity:1;animation:none;">happy-soft-maker.org</p>
+    <h1 class="hero-title" style="opacity:1;animation:none;font-size:clamp(2.8rem,8vw,5.5rem);">
+      みんなが<br>幸せになる<br><em>ソフトウェアを。</em>
+    </h1>
+    <p class="hero-sub" style="opacity:1;animation:none;">
+      AIでソフトウェア開発をほぼ全自動化する OSSフレームワーク。<br>
+      このビジョンを企業レベルで広げてくれる仲間を探しています。
+    </p>
+    <div class="hero-cta" style="opacity:1;animation:none;">
+      <a class="btn btn-primary" href="#ja-transfer">詳しく見る</a>
+      <a class="btn btn-ghost" href="https://github.com/GoodRelax/gr-sw-maker" target="_blank">GitHubを見る ↗</a>
+    </div>
+  </div>
+</div>
+
+<!-- JAPANESE MANIFESTO -->
+<div class="manifesto">
+  <div class="manifesto-inner">
+    <p class="manifesto-tag">思想</p>
+    <h2 class="manifesto-headline">ソフトを超えて、<br><em>幸せへ。</em></h2>
+    <p class="manifesto-body">
+      もう、ソフトが価値を持つ時代は終わった。<br>
+      想像してみて。<br>
+      ソフトとかハードとか、そんな些末な手段にこだわるより、<br>
+      誰をどう幸せにするかの本質にこだわる時代を。
+    </p>
+  </div>
+</div>
+
+<!-- JAPANESE: WHAT -->
+<section id="ja-what" class="bg2" style="border-top: 1px solid var(--border);">
+  <p class="section-eyebrow">このプロジェクトについて</p>
+  <h2 class="section-title">gr-sw-maker とは</h2>
+  <p class="section-body">
+    コンセプトを書くだけで、AIが仕様・設計・実装・テスト・デリバリーまでを自動で進めるフレームワークです。
+    あなたがやることは「何を作りたいか」を伝え、成果物を受け取るだけ。
+  </p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-title">コンセプトを書く</div>
+      <div class="step-body">何を作りたいか、なぜ必要か。それだけでいい。</div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-title">AIが全8フェーズを進める</div>
+      <div class="step-body">仕様→設計→実装→テスト→デリバリー。各フェーズに品質ゲートあり。</div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-title">成果物を受け取る</div>
+      <div class="step-body">コード・テスト・ドキュメント・デプロイまでセットで届く。</div>
+    </div>
+  </div>
+</section>
+
+<!-- JAPANESE: TRANSFER -->
+<section id="ja-transfer" class="bg2" style="border-top: 1px solid var(--border);">
+  <p class="section-eyebrow">ドメイン譲渡について</p>
+  <h2 class="section-title">このドメインを、<br>託せる方に渡します。</h2>
+  <p class="section-body">
+    happy-soft-maker.org は、gr-sw-maker を OSS として企業レベルで推進してくれる
+    組織・個人に無償で譲渡します。
+  </p>
+  <ul class="criteria">
+    <li>
+      <span class="criteria-icon">🌍</span>
+      <span class="criteria-text">OSSとしてオープンに発展させ、広くコミュニティに貢献できる</span>
+    </li>
+    <li>
+      <span class="criteria-icon">🏢</span>
+      <span class="criteria-text">企業・組織として継続的に推進するリソースと意志がある</span>
+    </li>
+    <li>
+      <span class="criteria-icon">💡</span>
+      <span class="criteria-text">「みんなが幸せになるSWを簡単に作る」というビジョンに本気で共感できる</span>
+    </li>
+  </ul>
+  <div class="cta-block">
+    <h3 class="section-title">まずは話しましょう。</h3>
+    <p class="section-body">GitHub の Issue からお気軽にご連絡ください。フォーマルでなくて大丈夫です。</p>
+    <a class="btn btn-primary" href="https://github.com/GoodRelax/gr-sw-maker/issues" target="_blank">GitHub Issue で連絡する ↗</a>
+  </div>
+</section>
+
+<footer>
+  <p>
+    <a href="https://github.com/GoodRelax/gr-sw-maker">gr-sw-maker</a>
+    &nbsp;·&nbsp;
+    MIT License
+    &nbsp;·&nbsp;
+    happy-soft-maker.org
+  </p>
+</footer>
+
+</body>
+</html>
